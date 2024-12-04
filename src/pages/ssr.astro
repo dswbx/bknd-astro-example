@@ -1,0 +1,35 @@
+---
+import { getApi } from "bknd/adapter/astro";
+import Card from "../components/Card.astro";
+import Layout from "../layouts/Layout.astro";
+const api = getApi(Astro, { mode: "dynamic" });
+const { data } = await api.data.readMany("todos");
+const user = api.getUser();
+
+export const prerender = false;
+---
+
+<Layout title="Welcome to Astro.">
+   <p slot="context">Server Side Rendering</p>
+   <ul role="list" class="link-card-grid">
+      {data.map((todo: any) => (
+         <Card
+            done={todo.done}
+            title={todo.title}
+            body={todo.description}
+         />
+      ))}
+   </ul>
+   <div class="center">
+      {user ? <p>Logged in as <b>{user?.email}</b>. <a href="/api/auth/logout">Logout</a></p> : <p>Not authenticated. <a href="/admin/auth/login">Sign in</a></p>}
+   </div>
+</Layout>
+
+<style>
+    .link-card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+        gap: 2rem;
+        padding: 0;
+    }
+</style>

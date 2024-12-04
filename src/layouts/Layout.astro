@@ -1,0 +1,137 @@
+---
+import Card from "../components/Card.astro";
+interface Props {
+   title: string;
+}
+
+const { title } = Astro.props;
+const path = new URL(Astro.request.url).pathname;
+const items = [
+   { href: "/", text: "Home (static)" },
+   { href: "/ssr", text: "SSR (with auth)" },
+   { href: "/admin", text: "Admin" }
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<nav>
+			{items.map((item) => (
+				<a href={item.href} data-active={path === item.href}>{item.text}</a>
+			))}
+		</nav>
+		<main>
+			<div class="center">
+				<h1>bknd + <span class="text-gradient">Astro</span></h1>
+				<slot name="context" />
+			</div>
+
+			<slot />
+		</main>
+	</body>
+</html>
+<style is:global>
+	:root {
+		--accent: 136, 58, 234;
+		--accent-light: 224, 204, 250;
+		--accent-dark: 49, 10, 101;
+		--accent-gradient: linear-gradient(
+			45deg,
+			rgb(var(--accent)),
+			rgb(var(--accent-light)) 30%,
+			white 60%
+		);
+	}
+	html {
+		font-family: system-ui, sans-serif;
+		background: #13151a;
+	}
+	code {
+		font-family:
+			Menlo,
+			Monaco,
+			Lucida Console,
+			Liberation Mono,
+			DejaVu Sans Mono,
+			Bitstream Vera Sans Mono,
+			Courier New,
+			monospace;
+	}
+	a, a:visited {
+		color: white;
+		font-weight: bold;
+	}
+	nav {
+		margin: auto;
+		padding: 1rem;
+		width: 800px;
+		color: white;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		gap: 1rem;
+	}
+		nav a {
+			color: white;
+			text-decoration: none;
+			background-image: none;
+		}
+			nav a[data-active],
+			nav a:hover {
+				background-image: var(--accent-gradient);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-size: 400%;
+				background-position: 0%;
+			}
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 800px;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+	}
+	main .center {
+		text-align: center;
+		margin-bottom: 2rem;
+
+		p {
+			opacity: 50%;
+			font-size: 1rem;
+		}
+	}
+	.astro-a {
+		position: absolute;
+		top: -32px;
+		left: 50%;
+		transform: translatex(-50%);
+		width: 220px;
+		height: auto;
+		z-index: -1;
+	}
+	h1 {
+		font-size: 4rem;
+		font-weight: 700;
+		line-height: 1;
+		text-align: center;
+		margin-bottom: 0.4em;
+	}
+	.text-gradient {
+		background-image: var(--accent-gradient);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 400%;
+		background-position: 0%;
+	}
+</style>

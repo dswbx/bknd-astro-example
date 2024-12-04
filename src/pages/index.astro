@@ -1,0 +1,29 @@
+---
+import { getApi } from "bknd/adapter/astro";
+import Card from "../components/Card.astro";
+import Layout from "../layouts/Layout.astro";
+const api = getApi(Astro);
+const { data } = await api.data.readMany("todos");
+---
+
+<Layout title="Welcome to Astro.">
+   <p slot="context">Static Rendering</p>
+   <ul role="list" class="link-card-grid">
+      {data.map((todo: any) => (
+         <Card
+            done={todo.done}
+            title={todo.title}
+            body={todo.description}
+         />
+      ))}
+   </ul>
+</Layout>
+
+<style>
+    .link-card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+        gap: 2rem;
+        padding: 0;
+    }
+</style>
